@@ -23,8 +23,6 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 
-gem 'rake', '< 11.0'
-
 # gem 'therubyracer', platforms: :ruby
 # Use Redis adapter to run Acti
 =begin
@@ -67,24 +65,25 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # gem 'debugger', group: [:development, :test]
 
 group :development do
-  gem 'guard-rspec', '~> 3.0.2'
-  gem 'guard-spork', '~> 1.5.1'
+  gem 'guard-rspec'
+  gem 'guard-spork'
   gem 'spork-rails', github: 'sporkrb/spork-rails'
-  gem 'rb-fsevent', '~> 0.9.3'
+  gem 'rb-fsevent'
 end
 
 group :development, :test do
-  gem "rspec-rails", "~> 2.14.0"
-  gem "factory_girl_rails", "~> 4.2.1"
+ gem 'rspec-rails', '~> 3.6'
+  gem "factory_girl_rails"
 end
 
 group :test do
-  gem "faker", "~> 1.1.2"
-  gem "capybara", "~> 2.1.0"
-  gem "database_cleaner", "~> 1.0.1"
-  gem "launchy", "~> 2.3.0"
-  gem "shoulda-matchers", "~> 2.2.0"
-  gem "selenium-webdriver", "~> 2.35.1"
+  gem 'rspec-rails', '~> 3.6'
+  gem "faker"
+  gem "capybara"
+  gem "database_cleaner"
+  gem "launchy"
+  gem "shoulda-matchers"
+  gem "selenium-webdriver"
 end
 
 gem "twitter-bootstrap-rails", "~> 2.2.8"
