@@ -27,6 +27,18 @@ describe Contact do
 		expect(contact.errors[:email]).to include("can't be blank")
 	end	
 
-	it "is invalid with a duplicate email address"
+	it "is invalid with a duplicate email address" do
+	    Contact.create(
+		  firstname: "John",
+		  lastname: "Doe",
+		  email: "test@example.com"	)
+		contact = Contact.new(
+		  firstname: "Doe",
+		  lastname: "John",
+		  email: "test@example.com")
+		contact.valid?
+		expect(contact.errors[:email]).to include("has already been taken")
+
+	end	
 	it "returns a contact's full name as a string"
 end
