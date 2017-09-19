@@ -40,6 +40,7 @@ describe Contact do
 		expect(contact.errors[:email]).to include("has already been taken")
 
 	end	
+
 	it "returns a contact's full name as a string" do
 		contact = Contact.create(
 			firstname: 'John',
@@ -47,5 +48,24 @@ describe Contact do
 			email: 'test@example.com')
 
 		expect(contact.name).to eq('John Doe')
+	end	
+
+	it "returns a sorted array of results that match " do 
+		jones = Contact.create(
+			firstname: 'Doe',
+			lastname: 'jones',
+			email: ' test@example.com')
+
+		johnstone = Contact.create(
+			firstname: 'Doe',
+			lastname: 'johnstone',
+			email: 'test1@example.com')
+
+		fena = Contact.create(
+			firstname: 'gitu',
+			lastname: 'fena',
+			email: 'test2@example.com')
+
+		expect(Contact.by_letter('j')).to eq [johnstone,jones]
 	end	
 end
