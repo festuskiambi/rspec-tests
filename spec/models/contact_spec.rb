@@ -49,44 +49,45 @@ describe Contact do
 
 		expect(contact.name).to eq('John Doe')
 	end	
+    describe "filter last name by letter" do
+	  it "returns a sorted array of results that match " do 
+		  jones = Contact.create(
+		  	firstname: 'Doe',
+		  	lastname: 'jones',
+		  	email: ' test@example.com')
 
-	it "returns a sorted array of results that match " do 
-		jones = Contact.create(
-			firstname: 'Doe',
-			lastname: 'jones',
-			email: ' test@example.com')
-
-		johnstone = Contact.create(
-			firstname: 'Doe',
-			lastname: 'johnstone',
+		  johnstone = Contact.create(
+		  	firstname: 'Doe',
+		  	lastname: 'johnstone',
 			email: 'test1@example.com')
-
-		fena = Contact.create(
+  
+		  fena = Contact.create(
 			firstname: 'gitu',
-			lastname: 'fena',
-			email: 'test2@example.com')
+		  	lastname: 'fena',
+		  	email: 'test2@example.com')
 
-		expect(Contact.by_letter('j')).to eq [johnstone,jones]
-	end
+		  expect(Contact.by_letter('j')).to eq [johnstone,jones]
+	  end
 
-	it "omits results that do not match" do 
-		jones = Contact.create(
-			firstname: 'Doe',
-			lastname: 'jones',
-			email: ' test@example.com')
+	   it "omits results that do not match" do 
+		   jones = Contact.create(
+		   	firstname: 'Doe',
+		   	lastname: 'jones',
+		   	email: ' test@example.com')
 
-		johnstone = Contact.create(
-			firstname: 'Doe',
-			lastname: 'johnstone',
-			email: 'test1@example.com')
+		   johnstone = Contact.create(
+		   	firstname: 'Doe',
+		   	lastname: 'johnstone',
+		   	email: 'test1@example.com')
 
-		fena = Contact.create(
-			firstname: 'gitu',
-			lastname: 'fena',
-			email: 'test2@example.com')
+		   fena = Contact.create(
+		   	firstname: 'gitu',
+		   	lastname: 'fena',
+		   	email: 'test2@example.com')
 
-		expect(Contact.by_letter('j')).not_to include fena
+		   expect(Contact.by_letter('j')).not_to include fena
+   
 
-
-	end	
+	   end	
+    end
 end
