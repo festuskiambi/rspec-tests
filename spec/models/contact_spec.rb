@@ -25,13 +25,9 @@ describe Contact do
 	end	
 
 	it "is invalid with a duplicate email address" do
-	    Contact.create(
-		  firstname: "John",
-		  lastname: "Doe",
+	    FactoryGirl.create(:contact,
 		  email: "test@example.com"	)
-		contact = Contact.new(
-		  firstname: "Doe",
-		  lastname: "John",
+		contact = FactoryGirl.build(:contact,
 		  email: "test@example.com")
 		contact.valid?
 		expect(contact.errors[:email]).to include("has already been taken")
@@ -39,10 +35,9 @@ describe Contact do
 	end	
 
 	it "returns a contact's full name as a string" do
-		contact = Contact.create(
+		contact = FactoryGirl.build(:contact,
 			firstname: 'John',
-			lastname: 'Doe',
-			email: 'test@example.com')
+			lastname: 'Doe')
 
 		expect(contact.name).to eq('John Doe')
 	end	
