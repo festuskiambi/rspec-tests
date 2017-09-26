@@ -6,6 +6,10 @@ describe Contact do
 	end	
 	
 
+	it 'has three phone numbers' do
+		expect(create(:contact).phones.count).to eq (3)
+	end	
+
 	it "is invalid without a firstname" do
 		contact = build(:contact,firstname: nil	)
 		contact.valid?
@@ -44,20 +48,20 @@ describe Contact do
     describe "filter last name by letter" do
        
        before :each do
-       	  @jones = Contact.create(
+       	  @jones = create(:contact,
 		  	firstname: 'Doe',
 		  	lastname: 'jones',
-		  	email: ' test@example.com')
+		  	)
 
-       	  @johnstone = Contact.create(
+       	  @johnstone = create(:contact,
 		  	firstname: 'Doe',
 		  	lastname: 'johnstone',
-			email: 'test1@example.com')
+			)
 
-       	  @fena = Contact.create(
+       	  @fena = create(:contact,
 			firstname: 'gitu',
 		  	lastname: 'fena',
-		  	email: 'test2@example.com')
+		  )
         end	
 
     	context " matching letters" do
