@@ -4,8 +4,20 @@ describe ContactsController do
 
 	describe 'GET #index' do 
 		context 'with params [:letter]' do 
-			it "populates an array of contacts starting with letter"
-			it "renders the :index template"
+			it "populates an array of contacts starting with letter" do
+				smith = create(:contact,
+					lastname: 'smith')
+				jones = create(:contact,
+					lastname: 'jones')
+
+				get :index, letter: 's'
+
+				expect(assigns(:contacts)).to match_array([smith])
+			end	
+			it "renders the :index template" do
+				get :index, letter: 's'
+				expect(response).to render_template :index
+			end	
 		end
 
 		context 'without params [:letter]' do
@@ -28,8 +40,13 @@ describe ContactsController do
 	end 
 
 	describe 'GET #new' do
-		it "assigns the requested contact to @contact"
+		it "assigns the new contact to @contact" do
+        	get :new 
+        	expect(assigns(:contact)).to be_a_new( Contact ) 
+		end	
+
 		it "renders the :new template"
+
 	end
 
 	describe 'GET #edit' do 
