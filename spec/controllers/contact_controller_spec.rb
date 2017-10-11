@@ -170,5 +170,15 @@ describe ContactsController do
 			delete :destroy,  id: @contact
 			expect(response).to redirect_to contacts_url
 		end	
-    end		
+    end
+
+	describe "PATCH hide_contact" do
+		before :each do
+			@contact = create(:contact)
+		end	
+		it "marks the contact as hidden" 	
+					
+			
+		it "redirects to contacts index"
+	end			
 end
