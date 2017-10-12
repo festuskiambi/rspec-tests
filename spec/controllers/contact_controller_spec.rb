@@ -203,6 +203,22 @@ describe ContactsController do
 				get :edit,  id:contact
 				expect(response).to redirect_to login_url
 			end	
+		end	
+
+		describe 'POST #create' do
+			it 'requires login' do
+				post :create, id:create(:contact),
+				contact: attributes_for(:contact)
+				expect(response).to redirect_to login_url
+			end	
+		end	
+
+		describe "PATCH #update" do 
+			it 'requires login' do
+				patch :update,  id:create(:contact),
+				contact: attributes_for(:contact)
+				expect(response).to redirect_to login_url
+			end	
 		end		
 	end			
 end
