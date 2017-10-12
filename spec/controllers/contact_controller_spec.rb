@@ -219,6 +219,13 @@ describe ContactsController do
 				contact: attributes_for(:contact)
 				expect(response).to redirect_to login_url
 			end	
+		end	
+
+		describe "DELETE #destroy" do
+			it 'requires login' do
+				delete :destroy , id:create(:contact)
+				expect(response).to redirect_to login_url
+			end	
 		end		
 	end			
 end
