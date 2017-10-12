@@ -195,6 +195,14 @@ describe ContactsController do
 				get :new  
 				expect(response).to redirect_to login_url
 			end	
-		end	
+		end
+
+		describe "GET #edit" do
+			it ' requires login' do
+				contact = create(:contact)
+				get :edit,  id:contact
+				expect(response).to redirect_to login_url
+			end	
+		end		
 	end			
 end
