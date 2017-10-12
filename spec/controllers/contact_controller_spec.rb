@@ -1,184 +1,200 @@
 require 'rails_helper'
 
 describe ContactsController do
+    
+	describe "user has administrator access" do
+		before :each do
+			user = create(:user)
+			session[:user_id] = user.id
+		end	
+		describe 'GET #index' do 
+			context 'with params [:letter]' do 
+				it "populates an array of contacts starting with letter" do
+					smith = create(:contact,
+						lastname: 'smith')
+					jones = create(:contact,
+						lastname: 'jones')
 
-	describe 'GET #index' do 
-		context 'with params [:letter]' do 
-			it "populates an array of contacts starting with letter" do
-				smith = create(:contact,
-					lastname: 'smith')
-				jones = create(:contact,
-					lastname: 'jones')
+					get :index, letter: 's'
 
-				get :index, letter: 's'
+					expect(assigns(:contacts)).to match_array([smith])
+				end	
+				it "renders the :index template" do
+					get :index, letter: 's'
+					expect(response).to render_template :index
+				end	
+			end
 
-				expect(assigns(:contacts)).to match_array([smith])
-			end	
-			it "renders the :index template" do
-				get :index, letter: 's'
-				expect(response).to render_template :index
+			context 'without params [:letter]' do
+				it "populates an array of all the contacts" do
+					smtith = create(:contact,
+						lastname: 'John')
+					jones = create(:contact,
+						lastname: 'smith')
+					get :index
+					expect(assigns(:contacts)).to match_array([smtith,jones])
+				end
+
+				it "renders the :index template" do
+					get :index , letter: ''
+					expect(response).to render_template :index
+				end	
 			end	
 		end
 
-		context 'without params [:letter]' do
-			it "populates an array of all the contacts" do
-				smtith = create(:contact,
-					lastname: 'John')
-				jones = create(:contact,
-					lastname: 'smith')
-				get :index
-				expect(assigns(:contacts)).to match_array([smtith,jones])
-		    end
-
-			it "renders the :index template" do
-				get :index , letter: ''
-				expect(response).to render_template :index
+		describe 'GET #show' do
+			it "assigns the requested contact to @contact" do
+				contact = create(:contact)
+				get :show , id: contact
+				expect(assigns(:contact)).to eq contact
 			end	
-		end	
-	end
+			it "renders the :show template" do 
+				contact = create(:contact)
+				get :show, id: contact
+				expect(response).to render_template :show
+			end	
+		end 
 
-	describe 'GET #show' do
-		it "assigns the requested contact to @contact" do
-			contact = create(:contact)
-            get :show , id: contact
-            expect(assigns(:contact)).to eq contact
-		end	
-		it "renders the :show template" do 
-			contact = create(:contact)
-			get :show, id: contact
-			expect(response).to render_template :show
-		end	
-	end 
+		describe 'GET #new' do
+			it "assigns the new contact to @contact" do
+				get :new 
+				expect(assigns(:contact)).to be_a_new( Contact ) 
+			end	
 
-	describe 'GET #new' do
-		it "assigns the new contact to @contact" do
-        	get :new 
-        	expect(assigns(:contact)).to be_a_new( Contact ) 
-		end	
+			it "renders the :new template" do
+				get :new
+				expect(response).to render_template :new
+			end
 
-		it "renders the :new template" do
-			get :new
-			expect(response).to render_template :new
-	    end
+		end
 
-	end
+		describe 'GET #edit' do 
+			it "assigns the requested contact to @contact" do
+				contact = create(:contact)
+				get :edit, id: contact
+				expect(assigns(:contact)).to eq contact
+			end	
+			it "renders the :edit template" do 
+				contact = create(:contact)
+				get :edit, id: contact
+				expect(response).to render_template :edit
+			end	
 
-	describe 'GET #edit' do 
-		it "assigns the requested contact to @contact" do
-			contact = create(:contact)
-			get :edit, id: contact
-			expect(assigns(:contact)).to eq contact
-		end	
-		it "renders the :edit template" do 
-			contact = create(:contact)
-			get :edit, id: contact
-			expect(response).to render_template :edit
 		end	
 
-	end	
+		describe 'POST #create' do
+			before :each do
+				@phones = [attributes_for(:phone),
+					attributes_for(:phone),
+					attributes_for(:phone)]
+			end	
+			context 'with valid attributes'do
+				it "it saves the new contact to the database"do 
+					expect{
+						post :create, contact: attributes_for(:contact,
+							phones_attributes: @phones)
+					}.to change(Contact, :count).by(1)
 
-	describe 'POST #create' do
-		before :each do
-			@phones = [attributes_for(:phone),
-				attributes_for(:phone),
-				attributes_for(:phone)]
-		end	
-		context 'with valid attributes'do
-			it "it saves the new contact to the database"do 
-				expect{
+				end
+				it "redirects to contacts#show" do 
 					post :create, contact: attributes_for(:contact,
 						phones_attributes: @phones)
-				}.to change(Contact, :count).by(1)
+
+					expect(response).to redirect_to contact_path(assigns[:contact])
+						
+				end		
+			end
+
+			context 'with invalid attributes' do
+				it "does not save new record to the databse"do
+					expect{
+						post :create, contact: attributes_for(:invalid_contact)
+					}.not_to change(Contact, :count)
+				end
+				it "re_renders the :new template " do
+					post :create, contact: attributes_for(:invalid_contact)
+					expect(response).to render_template :new
+				end	
+			end	
+		end	
+
+		describe 'PATCH #update 'do
+			before :each do
+				@contact = create(:contact,
+					firstname: 'John',
+					lastname: 'Doe')
+			end	
+			context 'with valid attributes'do
+				it "locates the requested contact" do
+					patch :update, id: @contact,  contact: attributes_for(:contact)
+					expect(assigns(:contact)).to eq @contact
+				end	
+				it "updates the contact in the databse " do 
+					patch :update, id:@contact, contact: attributes_for(:contact,
+						firstname: 'Doe',
+						lastname: 'John')
+					@contact.reload
+					expect(@contact.firstname).to eq('Doe')
+					expect(@contact.lastname).to eq('John')
+				end 
+				it "renders the updated contact" do 
+					patch :update, id:@contact, contact:attributes_for(:contact) 
+					expect(response).to redirect_to @contact               
+				end	
 
 			end
-			it "redirects to contacts#show" do 
-				post :create, contact: attributes_for(:contact,
-					phones_attributes: @phones)
 
-				expect(response).to redirect_to contact_path(assigns[:contact])
-					
-			end		
-	    end
+			context 'with Invalid attributes' do
+				it "does not update contact in the database" do
+					patch :update, id: @contact, contact:attributes_for(:contact,
+						firstname: 'smith',
+						lastname: nil)
+					@contact.reload
 
-	    context 'with invalid attributes' do
-	    	it "does not save new record to the databse"do
-	    		expect{
-	    			post :create, contact: attributes_for(:invalid_contact)
-	    		}.not_to change(Contact, :count)
-	        end
-	    	it "re_renders the :new template " do
-	    		post :create, contact: attributes_for(:invalid_contact)
-	    		expect(response).to render_template :new
-	    	end	
+					expect(@contact.firstname).to_not eq('smith')
+					expect(@contact.lastname).to eq('Doe')
+				end	
+				it "re_renders the :edit template"do
+				patch :update, id:@contact, contact:attributes_for(:invalid_contact)
+				@contact.reload
+				expect(response).to render_template :edit
+				end
+			end	
+		end
+
+		describe 'DELETE #destroy' do
+			before :each do
+				@contact = create(:contact) 
+			end	
+			it "deletes the contact from the database" do 
+				expect {
+					delete :destroy, id: @contact
+				}.to change(Contact,:count).by(-1)
+			end	
+			it "redirects to contacts#index" do
+				delete :destroy,  id: @contact
+				expect(response).to redirect_to contacts_url
+			end	
+		end
+
+		describe "PATCH hide_contact" do
+			before :each do
+				@contact = create(:contact)
+			end	
+			it "marks the contact as hidden" 	
+						
+				
+			it "redirects to contacts index"
+	
 	    end	
 	end	
 
-	describe 'PATCH #update 'do
-		before :each do
-			@contact = create(:contact,
-				firstname: 'John',
-				lastname: 'Doe')
-		end	
-		context 'with valid attributes'do
-		    it "locates the requested contact" do
-		    	patch :update, id: @contact,  contact: attributes_for(:contact)
-		    	expect(assigns(:contact)).to eq @contact
-		    end	
-			it "updates the contact in the databse " do 
-				patch :update, id:@contact, contact: attributes_for(:contact,
-					firstname: 'Doe',
-					lastname: 'John')
-				@contact.reload
-				expect(@contact.firstname).to eq('Doe')
-				expect(@contact.lastname).to eq('John')
-			end 
-			it "renders the updated contact" do 
-				patch :update, id:@contact, contact:attributes_for(:contact) 
-				expect(response).to redirect_to @contact               
+	describe "guest user access" do
+		describe 'GET #new' do
+			it 'requires login url' do
+				get :new  
+				expect(response).to redirect_to login_url
 			end	
-
-	    end
-
-	    context 'with Invalid attributes' do
-	    	it "does not update contact in the database" do
-	    		patch :update, id: @contact, contact:attributes_for(:contact,
-	    			firstname: 'smith',
-	    			lastname: nil)
-	    		@contact.reload
-
-	    		expect(@contact.firstname).to_not eq('smith')
-	    		expect(@contact.lastname).to eq('Doe')
-	    	end	
-	    	it "re_renders the :edit template"do
-	    	patch :update, id:@contact, contact:attributes_for(:invalid_contact)
-	    	@contact.reload
-	    	expect(response).to render_template :edit
-	        end
-	    end	
-    end
-
-    describe 'DELETE #destroy' do
-    	before :each do
-    		@contact = create(:contact) 
 		end	
-    	it "deletes the contact from the database" do 
-			expect {
-				delete :destroy, id: @contact
-			}.to change(Contact,:count).by(-1)
-    	end	
-    	it "redirects to contacts#index" do
-			delete :destroy,  id: @contact
-			expect(response).to redirect_to contacts_url
-		end	
-    end
-
-	describe "PATCH hide_contact" do
-		before :each do
-			@contact = create(:contact)
-		end	
-		it "marks the contact as hidden" 	
-					
-			
-		it "redirects to contacts index"
 	end			
 end
