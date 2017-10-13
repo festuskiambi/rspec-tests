@@ -11,7 +11,7 @@ describe ContactsController do
 		describe 'GET #index' do
 			it 'collects contacts to an array' do
 				get :index
-				expect(assigns(:contacts)).to match_array[@contacts]
+				expect(assigns(:contacts)).to match_array [@contact]
 			end	
 			it 'renders the index template' do
 				get :index
@@ -20,12 +20,12 @@ describe ContactsController do
 		end	
 		describe "GET #show" do
 			it 'assigns selected contact to @contact' do
-				get :show,  id:@comtact
+				get :show,  id:@contact
 				expect(assigns(:contact)).to eq @contact
 			end	
 
 			it 'renders the show template' do 
-				get :show
+				get :show, id:@contact
 				expect(response).to render_template :show
 			end	
 		end	
@@ -219,6 +219,7 @@ describe ContactsController do
 	end	
 
 	describe "guest user access" do
+		it_behaves_like 'public access to contacts '
 		describe 'GET #new' do
 			it 'requires login url' do
 				get :new  
