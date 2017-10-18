@@ -220,9 +220,9 @@ describe ContactsController do
 	describe "guest user access" do
 		it_behaves_like 'public access to contacts '
 		describe 'GET #new' do
-			it 'requires login url' do
+			it 'requires login ' do
 				get :new  
-				expect(response).to redirect_to login_url
+				expect(response).to require_login
 			end	
 		end
 
