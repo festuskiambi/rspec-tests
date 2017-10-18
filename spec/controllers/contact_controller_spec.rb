@@ -33,8 +33,7 @@ describe ContactsController do
     
 	describe "user has administrator access" do
 		before :each do
-			user = create(:user)
-			session[:user_id] = user.id
+			set_user_session create(:admin)
 		end	
 		describe 'GET #index' do 
 			context 'with params [:letter]' do 
