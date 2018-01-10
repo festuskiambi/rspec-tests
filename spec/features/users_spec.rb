@@ -1,9 +1,5 @@
 require 'rails_helper'
 
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :firefox)
-end
-
 feature "User management" do
     scenario 'adds a new user' do
         admin = create(:admin)
