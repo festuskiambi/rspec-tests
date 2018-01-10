@@ -84,6 +84,8 @@ group :test do
   gem "launchy"
   gem "shoulda-matchers"
   gem "selenium-webdriver"
+  gem 'geckodriver-helper'
+
 end
 
 gem "twitter-bootstrap-rails", "~> 2.2.8"
