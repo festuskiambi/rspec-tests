@@ -22,13 +22,21 @@ describe ContactsController do
 			end				
 		end	
 		describe "GET #show" do
+			let(:contact) {build_stubbed(:contact,firstname: 'Lawrence',lastname: 'Smith')}
+
+			before :each do
+				allow(Contact).to receive(:order).with('firstname,lastname').and_return([contact])
+				allow(Contact).to receive(:find).with(contact.id.to_s).and_return(contact)
+
+                get :show, id: contact
+
+            end
+
 			it 'assigns selected contact to @contact' do
-				get :show,  id:@contact
-				expect(assigns(:contact)).to eq @contact
+				expect(assigns(:contact)).to eq contact
 			end	
 
 			it 'renders the show template' do 
-				get :show, id:@contact
 				expect(response).to render_template :show
 			end	
 		end	

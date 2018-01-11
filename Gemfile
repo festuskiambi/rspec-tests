@@ -65,7 +65,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # gem 'debugger', group: [:development, :test]
 
 group :development do
-  gem 'guard-rspec'
+
   gem 'guard-spork'
   gem 'spork-rails', github: 'sporkrb/spork-rails'
   gem 'rb-fsevent'
@@ -73,11 +73,12 @@ end
 
 group :development, :test do
  gem 'rspec-rails', '~> 3.6'
-  gem "factory_girl_rails"
+ gem "factory_girl_rails"
+ gem 'guard-rspec'
+
 end
 
 group :test do
-  gem 'rspec-rails', '~> 3.6'
   gem "faker"
   gem "capybara"
   gem "database_cleaner"
